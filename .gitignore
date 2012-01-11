@@ -9,3 +9,11 @@ Data/tweets/h1n1/reindexed-irrelevant-graph.txt.gz
 
 Data/tweets/h1n1/irrelevant-reindexed-tweets.txt
 
+Data/tweets/h1n1/edges_friends
+
+Data/tweets/h1n1/edges_friends_chop_big.csv
+
+
+Data/tweets/h1n1/edges_friends_chop
+
+Data/tweets/h1n1/edges_friends_chop.csv
