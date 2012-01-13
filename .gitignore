@@ -17,3 +17,11 @@ Data/tweets/h1n1/edges_friends_chop_big.csv
 Data/tweets/h1n1/edges_friends_chop
 
 Data/tweets/h1n1/edges_friends_chop.csv
+
+Data/tweets/h1n1/sentiment_scores_gte_50percent
+
+Data/tweets/h1n1/edgeList
+
+Data/tweets/h1n1/sentiment_scores_gte_50percent.csv
+
+Data/tweets/h1n1/edgeList.csv
