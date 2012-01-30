@@ -10,10 +10,12 @@ negative = {}
 neutral = {}
 users = []
 
+#sys.stdout.write('uid\tsentiment score\ttotal vac tweets\n')
+
 for line in sys.stdin:
     sp = line.split('\t')
     uid = sp[2].strip(); 
-    if positive.get(uid, None) == None :
+    if not (uid in users) :
         positive[uid]=0
         negative[uid]=0
         neutral[uid]=0
@@ -34,5 +36,7 @@ for uid in users:
     sys.stdout.write(uid)
     sys.stdout.write('\t')
     sys.stdout.write(str(1.0*(positive[uid]-negative[uid])/(positive[uid]+negative[uid]+neutral[uid])))
+    sys.stdout.write('\t')
+    sys.stdout.write(str(positive[uid]+negative[uid]+neutral[uid]))
     sys.stdout.write('\n')
     

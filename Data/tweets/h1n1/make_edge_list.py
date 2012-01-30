@@ -14,11 +14,12 @@ for line in open('reindexed-tweets.txt','r'):
         tweets[uid] = []
     tweets[uid] = tweets[uid]+[sp[0].strip()]
 
+users = set(users)
 
 for line in open('reindexed-graph.txt','r') :
     sp = line.split('|')
     tweetid = sp[0].strip()
-    if sp[1] == 'FR':
+    if not(sp[1] == 'I'):
         friends = sp[2].split(',')
         uid = ''
         for user in users:
@@ -27,6 +28,8 @@ for line in open('reindexed-graph.txt','r') :
                     sys.stdout.write(sp[0])
                     sys.stdout.write(';')
                     sys.stdout.write(fr.strip())
-                    sys.stdout.write(';undirected\n')
-                    break
+                    sys.stdout.write(';')
+                    sys.stdout.write(sp[1])
+                    sys.stdout.write('\n')
+                break
                     

@@ -25,3 +25,17 @@ Data/tweets/h1n1/edgeList
 Data/tweets/h1n1/sentiment_scores_gte_50percent.csv
 
 Data/tweets/h1n1/edgeList.csv
+
+Data/tweets/h1n1/fullEdgeList.csv
+
+Data/tweets/h1n1/.RData
+
+Data/tweets/h1n1/.Rhistory
+
+Data/tweets/h1n1/*.csv*
+
+Data/tweets/h1n1/edgeListFollow*
+
+Data/tweets/h1n1/noDupEdges
+
+*.gephi*
