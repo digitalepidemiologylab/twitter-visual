@@ -23,58 +23,111 @@ public class JSonObject {
         int lefthanded = 0; //the number of { and [ without matching } and ] in the file at the point
         boolean inQuote = false;
         boolean inKey = true;
-        
+        boolean prevSlash = false;
         while(index < input.length())
         {
             char current = input.charAt(index);
             if(lefthanded == 0)
             {
-                if(current == '"')
+                if(inQuote)
                 {
-                    if(inQuote)
-                    {
+                    
+                    
+                    if(current == '\\')
+                        prevSlash = !prevSlash;
+                    
+                    
+                    if(current == '"' && !prevSlash)
                         inQuote = false;
-                    }
                     else
                     {
-                        inQuote = true;
-                        
+                         if(inKey)
+                            {
+                               key = key+current;
+                            }
+                            else
+                               item = item+current;
+                         
                     }
+                    
+                    if(prevSlash && current != '\\')
+                        prevSlash = false;
                 }
-                else if(current == ':' && inKey)
+                else switch(current)
                 {
-                    item = "";
-                    inKey = false;
+                    case '"':
+                        inQuote = !inQuote;
+                        break;
+                        
+                    case ':':
+                        if(inKey)
+                        {
+                            item = "";
+                            inKey = false;
+                        }
+                        else 
+                            item = item+current;
+                        break;
+                        
+                    case ',':
+
+                            elements.put(key, item);
+                            key = "";
+                            inKey = true;
+                        break;
+                        
+                    case '{': case '[':
+
+                            lefthanded ++;
+                        break;
+                        
+                    default:
+                        if(inKey)
+                        {
+                             key = key+current;
+                        }
+                        else
+                             item = item+current;
+                        break;
+                        
                 }
-                else if(current == ',' && !inQuote)
+                
+            }
+            else
+            {
+                if(inQuote)
+                {
+                   /* if(inKey)
+                    {
+                        key = key+current;
+                    }
+                    else
+                    item = item+current;*/
+                }
+                else
+                {
+                    switch(current)
+                     {
+                        case '{': case '[':
+                            lefthanded ++;
+                            break;
+                        
+                        case '}': case ']':
+                            lefthanded --;
+                            break;
+                     }
+                }
+                
+                if(current == '"')
+                    inQuote = !inQuote;
+                
+                if(lefthanded == 0)
                 {
                     elements.put(key, item);
                     key = "";
                     inKey = true;
                 }
-                else if(current == '{' || current == '[')
-                {
-                    lefthanded ++;
-                }
-                else if(inKey)
-                {
-                    key = key+current;
-                }
-                else
-                    item = item+current;
-            }
-            else
-            {
-                
-                if(current == '{' || current == '[')
-                {
-                    lefthanded ++;
-                }
-                else if(current == '}' || current == ']')
-                {
-                    lefthanded --;
-                }
-                if(lefthanded != 0)
+                else if(lefthanded != 0)
                 {
                     item = item+current;
                 }
@@ -101,8 +154,8 @@ public class JSonObject {
         }
         else
         {
-            //return "";
-            throw new NoSuchElementException("Could not find element: "+key);
+            return "null";
+            //throw new NoSuchElementException("Could not find element: "+key);
         }
     }
     public boolean contains(String key)
@@ -113,7 +166,7 @@ public class JSonObject {
     
     public static void main(String args[])
     {
-        JSonObject jso = new JSonObject("\"Test Key\":\"Test Value\",\"Subset\":{\"Key\":\"Value\"}");
+        JSonObject jso = new JSonObject("\"Test Key\":\"Test Value\",\"Sub\\\"set\":{\"Ke:y\":\"Value\"}\"next\":\"item\"");
         System.out.println(jso);
         JSonObject inside = new JSonObject(jso.get("Subset"));
         System.out.println(inside);

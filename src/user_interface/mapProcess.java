@@ -29,12 +29,13 @@ public class mapProcess implements twitterprocess{
         map = new earthFull(width,height,Color.BLACK,box);
         this.name = name;
         exposure = exp;
+        errors = 0;
     }
     @Override
     public void consume(tweet t) {
         try{
         map.addPoint(new Color(1.0f,1.0f,1.0f,exposure), t.loc);
-        }catch(Exception e){}
+        }catch(Exception e){errors++;System.err.println(e);e.printStackTrace();System.err.println(t.text);}
     }
 
     @Override
@@ -51,11 +52,12 @@ public class mapProcess implements twitterprocess{
         catch(IOException e)
         {
             System.out.println("Save Error: "+e);
+            return name+" saving error:  "+e.toString();
         }
         
        
         
-        return "";
+        return name+":    "+errors+" error(s)";
     }
     
     public boolean quitAtEnd()
@@ -65,4 +67,5 @@ public class mapProcess implements twitterprocess{
     private earthFull map;
     private String name = "map";
     private float exposure;
+    private int errors;
 }
