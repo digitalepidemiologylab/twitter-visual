@@ -40,9 +40,11 @@ public class tweet_consumer {
     public static void main (String args[]) throws FileNotFoundException, IOException
     {   
         File dataset = full;
-        boolean progress = false, buffStat = false, endSms = false;
-        for(String arg : args)
+        boolean progress = false, buffStat = false, endSms = false, update = false;
+        int updateRate = 0;
+        for(int ct=0;ct<args.length;ct++)
         {
+            String arg = args[ct];
             if(arg.equalsIgnoreCase("help"))
             {
                 System.out.println("Twitter Data Reader\n\nCommand\t\tResult\n-------\t\t------\n\nhelp\t\tshows this screen");
@@ -62,6 +64,11 @@ public class tweet_consumer {
             }
             if(arg.equals("t"))
                 endSms = true;
+            if(arg.equals("u"))
+            {
+                update = true;
+                updateRate = Integer.parseInt(args[ct+1]);
+            }
         }
         
         List<File> files = new LinkedList<File>();
@@ -114,7 +121,10 @@ public class tweet_consumer {
         twitterprocess tp = new multiProcess();
         ((multiProcess)tp).addLocations();
         // public mapProcess(Point2D.Double[] box, boolean visual, int width) throws IOException
-   
+        //((multiProcess)tp).add(new colorGrabber(new File("colors.csv")));
+        tp = new sqlProcess();
+        
+       // tp = new name_filter("XxPandaCowxX", new sqlProcess());
         
         twit_process_driver driver = new twit_process_driver(tp, queue, endSms);
         
@@ -131,6 +141,12 @@ public class tweet_consumer {
             t.start();
         }
         
+        
+        if(update)
+        {
+            new Thread(new text_update(time_remaining,prog,updateRate)).start();
+        }
+        
         long startTime = System.currentTimeMillis();
         long last = 0;
         for (int ct = 0; ct < files.size(); ct++) {
@@ -144,6 +160,10 @@ public class tweet_consumer {
                 if (result == null) {
                     break;
                 }
+                
+           //     if(Math.random() > 500000/250000000.0)
+             //       continue;
+                
                 if (result.equals("")) {
                     continue;
                 }
@@ -221,7 +241,7 @@ public class tweet_consumer {
             {
               //  System.out.println(tweets.size());
                 try {
-                    tweet t = new tweet(in.poll(10, TimeUnit.SECONDS));
+                    tweet t = new tweet(in.poll(10, TimeUnit.SECONDS), tweet.DATAMINING_TWEET);
                     out.put(t);
                     tweetCount++;
                 } catch (InterruptedException ex) {
@@ -236,6 +256,33 @@ public class tweet_consumer {
         public boolean done = false;
         
         
+    }
+    
+    private static class text_update implements Runnable
+    {
+        public text_update(JLabel remaining, JProgressBar progress, int rate)
+        {
+            this.remaining = remaining;
+            this.progress = progress;
+            this.rate = rate;
+        }
+        
+        public void run()
+        {
+            while(true)
+            {
+                try {
+                    Thread.sleep(rate*60*1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(tweet_consumer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                mailer.sendText("Update", remaining.getText()+"\n\n("+progress.getValue()+"/"+ progress.getMaximum() +")");
+            }
+        }
+        
+        private JLabel remaining;
+        private JProgressBar progress;
+        private int rate;
     }
     
     private static class buffer_update implements Runnable
