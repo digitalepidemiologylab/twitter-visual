@@ -11,6 +11,34 @@ import toddSon.JSonObject;
  * @author toddbodnar
  */
 public class user {
+    public user()
+    {
+        
+        
+        is_translator = false;
+        show_all_inline_media = false;
+        geo_enabled = false;
+        profile_use_background_image = false;
+        
+        listed_count = -1;
+        followers_count = -1;
+        favourites_count = -1;
+        friends_count = -1;
+        
+        id_str = "-1";
+        profile_image_url = "";
+        profile_link_color = "000000";
+        profile_sidebar_border_color = "000000";
+        profile_text_color = "000000";
+        profile_sidebar_fill_color = "000000";
+        
+        description = "dummy data";
+        name = "dummy";
+        screen_name = "Im_a_dummy";
+        location = "";
+        lang = "";
+        
+    }
     public user(String input)
     {
         //System.out.println(input);

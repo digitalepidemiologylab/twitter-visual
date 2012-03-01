@@ -17,8 +17,8 @@ public class JSonObject {
     {
         elements = new HashMap<String, String>();
         
-        String item = "";
-        String key = "";
+        StringBuffer item = new StringBuffer();
+        StringBuffer key = new StringBuffer();
         int index = 0;
         int lefthanded = 0; //the number of { and [ without matching } and ] in the file at the point
         boolean inQuote = false;
@@ -43,10 +43,10 @@ public class JSonObject {
                     {
                          if(inKey)
                             {
-                               key = key+current;
+                               key.append(current);
                             }
                             else
-                               item = item+current;
+                               item.append(current);
                          
                     }
                     
@@ -62,17 +62,17 @@ public class JSonObject {
                     case ':':
                         if(inKey)
                         {
-                            item = "";
+                            item.delete(0, item.length());
                             inKey = false;
                         }
                         else 
-                            item = item+current;
+                            item.append(current);
                         break;
                         
                     case ',':
 
-                            elements.put(key, item);
-                            key = "";
+                            elements.put(key.toString(), item.toString());
+                            key.setLength(0);
                             inKey = true;
                         break;
                         
@@ -84,10 +84,10 @@ public class JSonObject {
                     default:
                         if(inKey)
                         {
-                             key = key+current;
+                             key.append(current);
                         }
                         else
-                             item = item+current;
+                             item.append(current);
                         break;
                         
                 }
@@ -123,19 +123,19 @@ public class JSonObject {
                 
                 if(lefthanded == 0)
                 {
-                    elements.put(key, item);
-                    key = "";
+                    elements.put(key.toString(), item.toString());
+                    key.setLength(0);
                     inKey = true;
                 }
                 else if(lefthanded != 0)
                 {
-                    item = item+current;
+                    item.append(current);
                 }
             }
             //System.out.println(index+"  "+key+"  "+item);
             index++;
         }
-        elements.put(key, item);
+        elements.put(key.toString(), item.toString());
     }
     public String toString()
     {
@@ -168,7 +168,7 @@ public class JSonObject {
     {
         JSonObject jso = new JSonObject("\"Test Key\":\"Test Value\",\"Sub\\\"set\":{\"Ke:y\":\"Value\"}\"next\":\"item\"");
         System.out.println(jso);
-        JSonObject inside = new JSonObject(jso.get("Subset"));
+        JSonObject inside = new JSonObject(jso.get("Sub\\\"set"));
         System.out.println(inside);
     }
 }
